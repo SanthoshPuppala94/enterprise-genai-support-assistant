@@ -1,14 +1,14 @@
 # Mock Letter Generation SOP
 
-This SOP describes a mock LWS/LCD-style letter generation process. It is not a
-real bank procedure and contains no real client data.
+This SOP describes a mock enterprise correspondence generation process. It is
+not a real bank procedure and contains no real client data.
 
 ## Workflow
 
 1. Intake receives a mock event from an upstream servicing system.
 2. The rule engine selects a template and required paragraphs.
 3. The renderer creates a sample PDF-ready payload.
-4. The LCD transfer job packages the output for downstream print simulation.
+4. The file transfer job packages the output for downstream print simulation.
 5. Operations reviews failed batches and restarts eligible jobs.
 
 ## Letter Sections
@@ -22,4 +22,3 @@ policy text and must remain version controlled.
 
 Generated letters should be validated for template version, paragraph order,
 required disclosure, and transfer status before they are marked complete.
-

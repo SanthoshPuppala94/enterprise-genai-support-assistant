@@ -10,9 +10,9 @@ from app.tools.sql_tools import execute_select as execute_select_tool
 
 
 mcp = FastMCP(
-    name="enterprise-lws-genai-assistant",
+    name="enterprise-genai-support-assistant",
     instructions=(
-        "Mock production-style MCP server for enterprise LWS/LCD letter support. "
+        "Mock production-style MCP server for enterprise correspondence support. "
         "All tools and resources use synthetic data only and contain no real client data."
     ),
 )
@@ -25,7 +25,7 @@ def _read_mock_resource(relative_path: str) -> str:
 
 @mcp.tool()
 def search_documents(query: str, k: int = 4) -> list[dict[str, str | float]]:
-    """Search mock LWS/LCD policies, SOPs, runbooks, and letter documentation."""
+    """Search mock enterprise support policies, SOPs, runbooks, and letter documentation."""
     return search_documents_tool(query=query, k=k)
 
 
@@ -37,20 +37,20 @@ def execute_sql(query: str) -> list[dict[str, Any]]:
 
 @mcp.tool()
 def analyze_logs() -> dict[str, object]:
-    """Analyze synthetic LWS/LCD application logs for known support signatures."""
+    """Analyze synthetic enterprise correspondence application logs for known support signatures."""
     return analyze_logs_tool()
 
 
-@mcp.resource("mock://policies/lws")
+@mcp.resource("mock://policies/enterprise-support")
 def mock_policies() -> str:
-    """Mock LWS policy documentation."""
-    return _read_mock_resource("data/docs/lws_policy.md")
+    """Mock enterprise support policy documentation."""
+    return _read_mock_resource("data/docs/enterprise_support_policy.md")
 
 
-@mcp.resource("mock://runbooks/lcd-file-transfer")
+@mcp.resource("mock://runbooks/file-transfer")
 def mock_runbooks() -> str:
-    """Mock LCD file transfer runbook."""
-    return _read_mock_resource("data/docs/lcd_file_transfer_runbook.md")
+    """Mock correspondence file transfer runbook."""
+    return _read_mock_resource("data/docs/file_transfer_runbook.md")
 
 
 @mcp.resource("mock://letter-templates/generation-sop")

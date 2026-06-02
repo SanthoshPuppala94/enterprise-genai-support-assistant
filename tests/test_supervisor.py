@@ -6,7 +6,7 @@ def test_supervisor_routes_sql_question():
 
 
 def test_supervisor_routes_log_question():
-    assert route_question({"question": "Troubleshoot the LCD timeout error in logs"}) == "log_agent"
+    assert route_question({"question": "Troubleshoot the file transfer timeout error in logs"}) == "log_agent"
 
 
 def test_supervisor_routes_letter_question():
@@ -23,4 +23,3 @@ def test_supervisor_honors_preferred_agent():
         )
         == "sql_agent"
     )
-

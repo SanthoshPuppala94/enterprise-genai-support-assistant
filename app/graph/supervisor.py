@@ -2,7 +2,7 @@ from app.graph.state import ChatState
 
 
 SQL_TERMS = ("sql", "query", "database", "batch", "job", "letter_status", "customer", "select")
-RAG_TERMS = ("policy", "sop", "runbook", "documentation", "retention", "approval", "lcd")
+RAG_TERMS = ("policy", "sop", "runbook", "documentation", "retention", "approval", "file transfer")
 LOG_TERMS = ("log", "error", "failed", "timeout", "exception", "troubleshoot", "transfer")
 LETTER_TERMS = ("letter", "printed", "template", "paragraph", "section", "explain output")
 

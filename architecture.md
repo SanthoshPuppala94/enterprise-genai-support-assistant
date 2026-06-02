@@ -5,7 +5,8 @@
 Enterprise letter platforms often require support teams to answer questions
 across workflow status, policies, SOPs, transfer runbooks, logs, and generated
 letter output. This PoC models that support experience with mock data only. It is
-inspired by LWS/LCD-style workflows and contains no real PNC or client data.
+inspired by regulated enterprise correspondence workflows and contains no real
+company or client data.
 
 ## High-Level Architecture
 
@@ -15,7 +16,7 @@ four agents:
 
 - SQL Agent for mock operational database questions
 - Document/RAG Agent for mock policies, SOPs, runbooks, and letter documentation
-- Log Troubleshooting Agent for synthetic LWS/LCD application logs
+- Log Troubleshooting Agent for synthetic enterprise correspondence application logs
 - Letter Explanation Agent for explaining mock printed letter output
 
 ## Agent Flow
@@ -33,7 +34,7 @@ resources are registered with decorators so MCP clients can discover them at
 runtime.
 
 - Tools: `search_documents`, `execute_sql`, `analyze_logs`
-- Resources: `mock://policies/lws`, `mock://runbooks/lcd-file-transfer`,
+- Resources: `mock://policies/enterprise-support`, `mock://runbooks/file-transfer`,
   `mock://letter-templates/generation-sop`
 
 The server can be launched with `python -m app.mcp_server` and integrated with

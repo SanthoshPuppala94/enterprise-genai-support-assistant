@@ -56,4 +56,3 @@ def question_to_sql(question: str) -> str:
     if "customer" in q:
         return "SELECT customer_id, segment, communication_preference FROM mock_customers LIMIT 10"
     return "SELECT batch_id, template_code, status, created_at FROM letter_batches ORDER BY created_at DESC LIMIT 5"
-

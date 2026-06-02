@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT_DIR / "data"
-DB_PATH = DATA_DIR / "lws_mock.db"
+DB_PATH = DATA_DIR / "enterprise_support_mock.db"
 DOCS_DIR = DATA_DIR / "docs"
 LOGS_DIR = DATA_DIR / "logs"
 
@@ -15,7 +15,7 @@ load_dotenv(ROOT_DIR / ".env")
 
 
 class Settings(BaseSettings):
-    app_name: str = "Enterprise LWS GenAI Assistant"
+    app_name: str = "Enterprise GenAI Support Assistant"
     openai_api_key: str | None = None
     openai_base_url: str | None = None
     openai_model: str = "gpt-4o-mini"
@@ -28,4 +28,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

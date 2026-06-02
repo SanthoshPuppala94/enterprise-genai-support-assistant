@@ -10,7 +10,7 @@ class LogTroubleshootingAgent:
         analysis = analyze_logs()
         findings = analysis["findings"]
         if not findings:
-            answer = "No known mock LWS/LCD issue signatures were found in the application log."
+            answer = "No known mock enterprise correspondence issue signatures were found in the application log."
         else:
             lines = []
             for finding in findings:

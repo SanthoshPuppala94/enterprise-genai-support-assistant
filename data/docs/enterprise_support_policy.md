@@ -1,8 +1,8 @@
-# Mock LWS Policy
+# Mock Enterprise Support Policy
 
-This document is mock policy content for the Enterprise LWS GenAI Assistant PoC.
-It is inspired by enterprise letter workflow patterns and contains no real PNC,
-client, customer, account, or production data.
+This document is mock policy content for the Enterprise GenAI Support Assistant
+PoC. It is inspired by enterprise correspondence workflow patterns and contains
+no real company, client, customer, account, or production data.
 
 ## Communication Controls
 
@@ -18,7 +18,6 @@ requires compliance approval, template versioning, and sample output review.
 
 ## Retention
 
-Generated correspondence metadata is retained in the mock LWS database for audit
-and troubleshooting. Printed output artifacts are represented only by synthetic
-sample identifiers in this PoC.
-
+Generated correspondence metadata is retained in the mock enterprise support
+database for audit and troubleshooting. Printed output artifacts are represented
+only by synthetic sample identifiers in this PoC.

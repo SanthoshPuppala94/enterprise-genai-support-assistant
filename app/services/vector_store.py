@@ -70,7 +70,7 @@ class LocalVectorStore:
             return False
 
         client = chromadb.PersistentClient(path=str(ROOT_DIR / "data" / "chroma"))
-        collection = client.get_or_create_collection("mock_lws_docs")
+        collection = client.get_or_create_collection("mock_enterprise_support_docs")
         existing = collection.count()
         if existing == 0 and raw_chunks:
             ids = [source for source, _ in raw_chunks]

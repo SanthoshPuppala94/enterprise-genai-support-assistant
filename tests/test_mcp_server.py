@@ -19,8 +19,8 @@ def test_mcp_resources_are_registered_with_fastmcp_decorators():
 
     resource_uris = asyncio.run(run())
     assert {
-        "mock://policies/lws",
-        "mock://runbooks/lcd-file-transfer",
+        "mock://policies/enterprise-support",
+        "mock://runbooks/file-transfer",
         "mock://letter-templates/generation-sop",
     }.issubset(resource_uris)
 
@@ -32,4 +32,3 @@ def test_mcp_execute_sql_tool_enforces_select_only_safety():
     content, structured = asyncio.run(run())
     assert content
     assert structured["result"][0]["batch_id"].startswith("B-")
-

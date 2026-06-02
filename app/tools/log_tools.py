@@ -4,8 +4,8 @@ from app.config import LOGS_DIR
 
 
 ISSUE_PATTERNS = {
-    "LCD_FILE_TIMEOUT": {
-        "root_cause": "Outbound LCD file handoff exceeded the configured acknowledgement window.",
+    "FILE_TRANSFER_TIMEOUT": {
+        "root_cause": "Outbound correspondence file handoff exceeded the configured acknowledgement window.",
         "remediation": "Validate the transfer endpoint, retry the batch, and notify operations if acknowledgements remain delayed.",
     },
     "TEMPLATE_RULE_MISS": {
@@ -20,7 +20,7 @@ ISSUE_PATTERNS = {
 
 
 def analyze_logs(log_path: Path | None = None) -> dict[str, object]:
-    path = log_path or LOGS_DIR / "lws_app.log"
+    path = log_path or LOGS_DIR / "support_app.log"
     content = path.read_text(encoding="utf-8")
     findings = []
     for code, detail in ISSUE_PATTERNS.items():
@@ -31,4 +31,3 @@ def analyze_logs(log_path: Path | None = None) -> dict[str, object]:
         "findings": findings,
         "line_count": len(content.splitlines()),
     }
-

@@ -1,2 +1,1 @@
-"""Enterprise LWS GenAI Assistant mock PoC."""
-
+"""Enterprise GenAI Support Assistant mock PoC."""
