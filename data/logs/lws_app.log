@@ -1,0 +1,8 @@
+2026-05-17T09:02:10Z INFO batch=B-1001 template=NOTICE_A status=STARTED message="Mock letter batch started"
+2026-05-17T09:02:13Z WARN batch=B-1001 code=PDF_RENDER_WARN message="Optional logo asset not found; using fallback"
+2026-05-17T09:05:55Z INFO batch=B-1001 template=NOTICE_A status=COMPLETED message="Mock letter batch completed"
+2026-05-17T10:11:21Z INFO batch=B-1002 template=LCD_XFER status=STARTED message="LCD transfer started"
+2026-05-17T10:16:42Z ERROR batch=B-1002 code=LCD_FILE_TIMEOUT message="No acknowledgement received within mock SLA"
+2026-05-17T10:20:03Z INFO batch=B-1003 template=DISCLOSURE_B status=STARTED message="Mock rule evaluation started"
+2026-05-17T10:20:04Z ERROR batch=B-1003 code=TEMPLATE_RULE_MISS message="Paragraph mapping missing for action_required"
+

@@ -1,0 +1,11 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.benchmarks/
+.coverage
+htmlcov/
+*.pyc
+data/*.db
+data/chroma/
+data/faiss/
