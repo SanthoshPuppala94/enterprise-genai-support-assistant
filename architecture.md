@@ -69,6 +69,17 @@ variables, `.env` is ignored by git, and no API keys are hardcoded. The current
 offline path works without a key; hosted OpenAI-compatible calls can be added
 behind the existing configuration.
 
+## Guardrails and Hallucination Controls
+
+The assistant treats mock source grounding as a first-class requirement. RAG and
+letter agents attach citations from local mock documents. If no citation is
+available, the response is replaced with an evidence-limited fallback rather than
+an unsupported answer.
+
+SQL guardrails enforce SELECT-only access and block mutating, administrative, or
+multi-statement SQL. All user-facing answers include a mock-data disclaimer so
+demo output is not mistaken for real bank/client guidance.
+
 ## Production Security Considerations
 
 - Keep real client data out of local demos and test fixtures.

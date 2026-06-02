@@ -15,6 +15,7 @@ production system data.
 - Short-term state memory in LangGraph and long-term preference memory in SQLite
 - Production-style FastMCP server with decorated tools and resources
 - FastAPI `/chat` endpoint for local demos
+- Guardrails for SQL safety, mock-data boundaries, citation grounding, and hallucination control
 
 ## Setup
 
@@ -97,6 +98,14 @@ Response:
 }
 ```
 
+## Guardrails and Hallucination Controls
+
+- SQL tools are SELECT-only and reject INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, PRAGMA, and multi-statement SQL.
+- RAG and letter explanations require citations from mock documents before returning grounded answers.
+- Responses include a mock-data disclaimer so generated answers are not confused with real banking/client guidance.
+- If citations are unavailable, the assistant returns an evidence-limited fallback instead of inventing a source.
+- Secrets are loaded through `.env`; API keys are never hardcoded.
+
 ## Interview Positioning
 
 Say this is a safe, mock production-style GenAI PoC for banking letter-generation
@@ -115,3 +124,5 @@ any real PNC or client data. The strongest talking points are:
   the demo.
 - You documented security considerations such as secrets handling, SQL safety,
   least privilege, auditability, and mock-data boundaries.
+- You added hallucination controls through citations, evidence-limited fallback
+  responses, and explicit mock-data guardrail notes.

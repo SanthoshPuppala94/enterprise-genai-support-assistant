@@ -1,4 +1,5 @@
 from app.graph.state import ChatState
+from app.services.guardrails import apply_grounding_guardrails
 from app.tools.rag_tools import search_documents
 
 
@@ -16,12 +17,12 @@ class LetterExplanationAgent:
     def run(self, state: ChatState) -> ChatState:
         docs = search_documents("letter template sections business rules disclosure action required", k=3)
         section_lines = [f"- {section.title()}: {rule}" for section, rule in SECTION_RULES.items()]
-        state["answer"] = (
+        answer = (
             "Mock printed letter output can be explained as these policy-driven sections:\n"
             + "\n".join(section_lines)
             + "\n\nEach section is traceable to mock SOP/template documentation and should never be treated as real client correspondence."
         )
         state["citations"] = [str(doc["source"]) for doc in docs]
+        state["answer"] = apply_grounding_guardrails(answer, state["citations"])
         state["agent_used"] = self.name
         return state
-

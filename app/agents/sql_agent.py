@@ -1,4 +1,5 @@
 from app.graph.state import ChatState
+from app.services.guardrails import add_mock_data_disclaimer
 from app.tools.sql_tools import SQLSafetyError, execute_select, question_to_sql
 
 
@@ -10,7 +11,7 @@ class SQLAgent:
         try:
             rows = execute_select(query)
             state["sql_results"] = rows
-            state["answer"] = (
+            state["answer"] = add_mock_data_disclaimer(
                 f"Executed safe read-only SQL:\n\n```sql\n{query}\n```\n\n"
                 f"Returned {len(rows)} row(s): {rows}"
             )
@@ -20,4 +21,3 @@ class SQLAgent:
             state["citations"] = []
         state["agent_used"] = self.name
         return state
-
