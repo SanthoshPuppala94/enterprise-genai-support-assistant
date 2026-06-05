@@ -1,95 +1,140 @@
-# Enterprise GenAI Support Assistant
+# 🏦 Enterprise GenAI Support Assistant
 
-Enterprise GenAI Support Assistant is a mock production-style GenAI PoC inspired
-by enterprise correspondence support workflows. It uses only synthetic data and
-does not contain real company, client, customer, account, letter, log, or
-production system data.
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![LangGraph](https://img.shields.io/badge/LangGraph-FF6B35?style=flat)](https://langchain-ai.github.io/langgraph/)
+[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com)
+[![pytest](https://img.shields.io/badge/Tested_with-pytest-0A9EDC?style=flat&logo=pytest&logoColor=white)](https://pytest.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](LICENSE)
 
-## What It Demonstrates
+> **Production-style GenAI PoC** — A mock enterprise correspondence support assistant demonstrating LangGraph supervisor agents, RAG pipelines, SQL safety guardrails, MCP tool governance, and hallucination controls. Uses only synthetic data.
 
-- LangGraph supervisor agent that routes requests to specialist agents
-- SQLite SQL agent with SELECT-only safety validation
-- Document/RAG agent over mock policies, SOPs, runbooks, and letter docs
-- Log troubleshooting agent for synthetic enterprise correspondence issue signatures
-- Letter explanation agent that maps mock printed output sections to policies
-- Short-term state memory in LangGraph and long-term preference memory in SQLite
-- Production-style FastMCP server with decorated tools and resources
-- FastAPI `/chat` endpoint for local demos
-- Guardrails for SQL safety, mock-data boundaries, citation grounding, and hallucination control
+---
 
-## Setup
+## What It Does
 
-```powershell
-cd enterprise-genai-support-assistant
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
+This assistant answers support queries for a mock banking letter-generation workflow. A **LangGraph supervisor agent** routes each incoming question to the right specialist:
+
+| Agent | Responsibility |
+|-------|---------------|
+| **SQL Agent** | Queries operational data with SELECT-only safety validation |
+| **RAG Agent** | Retrieves from mock policies, SOPs, and runbooks with citation grounding |
+| **Log Agent** | Troubleshoots synthetic enterprise log signatures |
+| **Letter Agent** | Explains printed letter sections and maps them to business rules |
+
+All agents share short-term graph state and long-term SQLite preference memory.
+
+---
+
+## Architecture
+
+```
+POST /chat
+    │
+    ▼
+LangGraph Supervisor
+    │
+    ├──► SQL Agent        → SELECT-only SQLite queries
+    ├──► RAG Agent        → ChromaDB-style retrieval + citation check
+    ├──► Log Agent        → Synthetic log pattern matching
+    └──► Letter Agent     → SOP / letter section explanation
+    │
+    ▼
+FastMCP Server (stdio)
+    ├── Tools:     search_documents · execute_sql · analyze_logs
+    └── Resources: mock://policies · mock://runbooks · mock://letter-templates
+    │
+    ▼
+Response: { "answer": "...", "agent_used": "...", "citations": [...] }
 ```
 
-Open `.env` and add an OpenAI-compatible API key only if you want to extend the
-PoC with hosted LLM calls. The current implementation has deterministic local
-fallbacks for offline testing.
+---
 
-## Run Locally
+## Key Design Decisions
 
-```powershell
+- **Supervisor pattern** — Routes work to specialized agents instead of forcing one prompt to handle every task type
+- **SQL guardrails** — Rejects `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `CREATE`, `PRAGMA`, and multi-statement SQL
+- **Citation-grounded RAG** — Policy/SOP answers must cite mock documents; no citation → evidence-limited fallback
+- **FastMCP decorators** — Tools and resources registered with explicit schemas so compatible clients can discover and govern them
+- **Memory architecture** — Short-term graph state for the current session; SQLite for long-term user preferences
+- **Secret hygiene** — All credentials via `.env`; no hardcoded API keys
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Python 3.11+
+- An OpenAI-compatible API key (optional — the PoC has deterministic local fallbacks for offline testing)
+
+### Setup
+
+```bash
+git clone https://github.com/SanthoshPuppala94/enterprise-genai-support-assistant
+cd enterprise-genai-support-assistant
+
+python -m venv .venv
+
+# Windows
+.\.venv\Scripts\Activate.ps1
+# macOS / Linux
+source .venv/bin/activate
+
+pip install -r requirements.txt
+cp .env.example .env
+# Edit .env and add your API key if using a hosted LLM
+```
+
+### Run the API
+
+```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-Run the MCP server over stdio:
+### Run the MCP Server
 
-```powershell
+```bash
 python -m app.mcp_server
 ```
 
-The MCP server registers these decorated tools:
+### Run Tests
 
-- `search_documents`
-- `execute_sql`
-- `analyze_logs`
+```bash
+pytest
+```
 
-It also registers these decorated resources:
+---
 
-- `mock://policies/enterprise-support`
-- `mock://runbooks/file-transfer`
-- `mock://letter-templates/generation-sop`
+## Example Queries
 
-Then call:
-
-```powershell
+```bash
+# Query the database
 Invoke-RestMethod -Method Post `
   -Uri http://127.0.0.1:8000/chat `
   -ContentType "application/json" `
   -Body '{"question":"What failed letter batches are in the database?"}'
+
+# Policy retrieval
+Invoke-RestMethod -Method Post `
+  -Uri http://127.0.0.1:8000/chat `
+  -ContentType "application/json" `
+  -Body '{"question":"What does the enterprise support policy say about disclosure approval?"}'
+
+# Log troubleshooting
+Invoke-RestMethod -Method Post `
+  -Uri http://127.0.0.1:8000/chat `
+  -ContentType "application/json" `
+  -Body '{"question":"Troubleshoot the file transfer timeout from the logs."}'
 ```
 
-## Run Tests
+### API Contract
 
-```powershell
-pytest
-```
-
-## Sample Questions
-
-- What failed letter batches are in the database?
-- What does the mock enterprise support policy say about disclosure approval?
-- Troubleshoot the file transfer timeout from the logs.
-- Explain the printed letter sections and the business rules behind them.
-- Show customer communication preferences from the mock database.
-
-## API Contract
-
-`POST /chat`
-
-Request:
-
+**Request**
 ```json
 { "question": "Troubleshoot the file transfer timeout error in logs" }
 ```
 
-Response:
-
+**Response**
 ```json
 {
   "answer": "Probable mock log findings...",
@@ -98,32 +143,39 @@ Response:
 }
 ```
 
-## Guardrails and Hallucination Controls
+---
 
-- SQL tools are SELECT-only and reject INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, PRAGMA, and multi-statement SQL.
-- RAG and letter explanations require citations from mock documents before returning grounded answers.
-- Responses include a mock-data disclaimer so generated answers are not confused with real banking/client guidance.
-- If citations are unavailable, the assistant returns an evidence-limited fallback instead of inventing a source.
-- Secrets are loaded through `.env`; API keys are never hardcoded.
+## Project Structure
 
-## Interview Positioning
+```
+enterprise-genai-support-assistant/
+├── app/
+│   ├── main.py           # FastAPI app + /chat endpoint
+│   ├── agents/           # Supervisor + specialist agents
+│   ├── mcp_server.py     # FastMCP tools and resources
+│   └── memory.py         # Short-term + SQLite long-term memory
+├── data/                 # Synthetic mock data (policies, logs, letters)
+├── tests/                # pytest test suite
+├── architecture.md       # Architecture detail and design decisions
+├── .env.example          # Environment template
+└── requirements.txt
+```
 
-Say this is a safe, mock production-style GenAI PoC for enterprise
-correspondence support. It mirrors the patterns of regulated enterprise support
-workflows without using any real company or client data. The strongest talking
-points are:
+---
 
-- You used a supervisor pattern to route work to specialized agents instead of
-  forcing one prompt to handle every task.
-- You added SQL guardrails so the agent can query operational data but cannot
-  mutate the database.
-- You used RAG with citations so policy/SOP answers remain grounded in approved
-  mock documents.
-- You registered MCP tools/resources with `FastMCP` decorators so compatible
-  clients can discover and execute the same governed capabilities.
-- You included memory for user preferences while keeping sensitive data out of
-  the demo.
-- You documented security considerations such as secrets handling, SQL safety,
-  least privilege, auditability, and mock-data boundaries.
-- You added hallucination controls through citations, evidence-limited fallback
-  responses, and explicit mock-data guardrail notes.
+## ⚠️ Data Notice
+
+This project uses **only synthetic data**. It does not contain real company, client, customer, account, letter, log, or production system data of any kind.
+
+---
+
+## About
+
+Built as a portfolio project to demonstrate enterprise GenAI patterns — not a production deployment. Talking points:
+
+- Supervisor routing vs. monolithic prompting
+- SQL guardrails for safe operational data access
+- Citation-grounded RAG for auditability
+- MCP tool governance with FastMCP
+- Memory without hiding state in prompt text
+- Hallucination controls through evidence-limited fallbacks
