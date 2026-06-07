@@ -12,7 +12,7 @@
 
 ## What It Does
 
-This assistant models a realistic enterprise support workflow where business users raise incidents when expected printed correspondence is missing or delayed. It helps reduce repetitive incident triage by retrieving mock incident details, VM batch server logs, PDF/print delivery status, prior engineer actions, and runbook guidance before recommending next steps.
+This assistant models a realistic enterprise support workflow where business users raise incidents when expected printed correspondence is missing or delayed. It helps reduce repetitive incident triage by retrieving mock incident details, cloud/container batch worker logs, PDF/print delivery status, prior engineer actions, and runbook guidance before recommending next steps.
 
 A **LangGraph supervisor agent** routes each incoming question to the right specialist:
 
@@ -37,7 +37,7 @@ Incident RCA Agent
    ↓
 MCP tools fetch:
    - incident details
-   - VM batch server logs
+   - cloud/container batch worker logs
    - PDF/print delivery status
    - prior engineer resolutions
    - incident triage runbook
@@ -50,7 +50,7 @@ Grounded RCA:
    - citations and guardrail note
 ```
 
-The infrastructure is modeled as **enterprise-managed VM batch servers**, not cloud-specific infrastructure. That reflects common regulated enterprise batch processing patterns while keeping the project generic and mock-data only.
+The infrastructure is modeled as **Dockerized batch workers running in a cloud-ready enterprise environment**. The project stays provider-neutral, but the terminology aligns with modern containerized workloads, centralized logging, and cloud deployment patterns.
 
 ---
 
@@ -192,7 +192,7 @@ This project uses **only synthetic data**. It does not contain real company, cli
 
 Say:
 
-> “I built a mock enterprise correspondence support assistant to reduce repetitive incident triage. When business users report missing printed letters, the assistant uses MCP tools to fetch incident details, VM batch logs, print delivery status, prior engineer actions, and runbook guidance. A LangGraph RCA workflow then produces a grounded summary with citations and recommends whether support can resolve it operationally or whether a CR is needed.”
+> “I built a mock enterprise correspondence support assistant to reduce repetitive incident triage. When business users report missing printed letters, the assistant uses MCP tools to fetch incident details, cloud/container batch logs, print delivery status, prior engineer actions, and runbook guidance. A LangGraph RCA workflow then produces a grounded summary with citations and recommends whether support can resolve it operationally or whether a CR is needed.”
 
 Strong talking points:
 
@@ -202,4 +202,3 @@ Strong talking points:
 - Prior engineer actions reduce dependency on tribal knowledge.
 - SQL and MCP tools are constrained and auditable.
 - CR recommendations are draft-only and require human review, tests, approvals, and standard governance.
-

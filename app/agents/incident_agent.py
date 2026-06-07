@@ -70,7 +70,7 @@ def _format_rca_answer(
     answer = (
         f"Incident RCA summary for {incident['incident_id']}\n\n"
         f"Business impact: {incident['business_impact']}\n"
-        f"Affected batch: {incident['batch_id']} on enterprise VM batch servers\n"
+        f"Affected batch: {incident['batch_id']} on cloud-managed container batch workers\n"
         f"Print job: {incident['print_job_id']} status={print_status['delivery_status']}\n\n"
         "Confirmed log signals:\n"
         f"{failed_signals}\n\n"

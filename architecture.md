@@ -31,15 +31,15 @@ four agents:
 ## Incident RCA Flow
 
 The incident workflow models support triage for business-reported missing printed
-correspondence. It uses generic enterprise VM batch server terminology and mock
-data only.
+correspondence. It uses generic Dockerized, cloud-ready batch worker terminology
+and mock data only.
 
 ```text
 INC ticket
    ↓
 fetch_incident_details
    ↓
-fetch_batch_job_logs from VM batch server logs
+fetch_batch_job_logs from container batch worker logs
    ↓
 fetch_print_delivery_status
    ↓
@@ -114,7 +114,7 @@ SQL guardrails enforce SELECT-only access and block mutating, administrative, or
 multi-statement SQL. All user-facing answers include a mock-data disclaimer so
 demo output is not mistaken for real bank/client guidance.
 
-Incident RCA guardrails require evidence from incident records, VM batch logs,
+Incident RCA guardrails require evidence from incident records, container batch logs,
 print delivery status, prior engineer actions, and runbooks. CR summaries are
 draft-only and require human review, tests, approval, and standard change
 governance before any implementation.

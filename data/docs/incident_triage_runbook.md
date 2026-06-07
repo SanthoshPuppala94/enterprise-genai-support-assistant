@@ -8,7 +8,7 @@ It contains no real company, client, customer, or production data.
 When business users report missing printed letters, support should verify:
 
 1. Incident details and affected batch ID.
-2. Batch job status on enterprise-managed VM batch servers.
+2. Batch job status on cloud-managed container batch workers.
 3. PDF generation status.
 4. Print file package status.
 5. File handoff and downstream acknowledgement status.

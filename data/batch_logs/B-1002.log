@@ -1,6 +1,6 @@
-2026-05-17T10:11:21Z VM=vm-batch-02 JOB=CORR_DAILY_NOTICE BATCH=B-1002 STATUS=STARTED message="Daily correspondence batch started"
-2026-05-17T10:12:04Z VM=vm-batch-02 JOB=PDF_RENDER BATCH=B-1002 STATUS=COMPLETED message="PDF payload generated for 1248 letters"
-2026-05-17T10:13:10Z VM=vm-batch-02 JOB=FILE_PACKAGE BATCH=B-1002 STATUS=COMPLETED message="Print file package created"
-2026-05-17T10:16:42Z VM=vm-batch-02 JOB=FILE_HANDOFF BATCH=B-1002 STATUS=FAILED code=FILE_TRANSFER_TIMEOUT message="No downstream acknowledgement received within mock SLA"
-2026-05-17T10:17:20Z VM=vm-batch-02 JOB=CORR_DAILY_NOTICE BATCH=B-1002 STATUS=FAILED message="Batch marked failed due to file handoff timeout"
+2026-05-17T10:11:21Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-02 JOB=CORR_DAILY_NOTICE BATCH=B-1002 STATUS=STARTED message="Daily correspondence batch started"
+2026-05-17T10:12:04Z SERVICE=pdf-render-worker CONTAINER=pdf-worker-02 JOB=PDF_RENDER BATCH=B-1002 STATUS=COMPLETED message="PDF payload generated for 1248 letters"
+2026-05-17T10:13:10Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-02 JOB=FILE_PACKAGE BATCH=B-1002 STATUS=COMPLETED message="Print file package created"
+2026-05-17T10:16:42Z SERVICE=file-handoff-worker CONTAINER=handoff-worker-02 JOB=FILE_HANDOFF BATCH=B-1002 STATUS=FAILED code=FILE_TRANSFER_TIMEOUT message="No downstream acknowledgement received within mock SLA"
+2026-05-17T10:17:20Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-02 JOB=CORR_DAILY_NOTICE BATCH=B-1002 STATUS=FAILED message="Batch marked failed due to file handoff timeout"
 

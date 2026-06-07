@@ -1,5 +1,5 @@
-2026-05-10T09:10:00Z VM=vm-batch-01 JOB=CORR_DAILY_NOTICE BATCH=B-0995 STATUS=STARTED message="Daily correspondence batch started"
-2026-05-10T09:12:30Z VM=vm-batch-01 JOB=FILE_HANDOFF BATCH=B-0995 STATUS=WARN code=LATE_ACK message="Downstream acknowledgement delayed"
-2026-05-10T09:16:10Z VM=vm-batch-01 JOB=FILE_HANDOFF BATCH=B-0995 STATUS=COMPLETED message="Acknowledgement received after retry"
-2026-05-10T09:16:40Z VM=vm-batch-01 JOB=CORR_DAILY_NOTICE BATCH=B-0995 STATUS=COMPLETED message="Batch completed after retry"
+2026-05-10T09:10:00Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-01 JOB=CORR_DAILY_NOTICE BATCH=B-0995 STATUS=STARTED message="Daily correspondence batch started"
+2026-05-10T09:12:30Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-01 JOB=FILE_HANDOFF BATCH=B-0995 STATUS=WARN code=LATE_ACK message="Downstream acknowledgement delayed"
+2026-05-10T09:16:10Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-01 JOB=FILE_HANDOFF BATCH=B-0995 STATUS=COMPLETED message="Acknowledgement received after retry"
+2026-05-10T09:16:40Z SERVICE=correspondence-batch-worker CONTAINER=batch-worker-01 JOB=CORR_DAILY_NOTICE BATCH=B-0995 STATUS=COMPLETED message="Batch completed after retry"
 

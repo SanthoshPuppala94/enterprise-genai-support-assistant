@@ -57,7 +57,7 @@ def fetch_incident_details(incident_id: str) -> dict[str, Any]:
 
 @mcp.tool()
 def fetch_batch_job_logs(batch_id: str) -> dict[str, Any]:
-    """Fetch synthetic VM batch server logs for a correspondence batch."""
+    """Fetch synthetic cloud/container batch worker logs for a correspondence batch."""
     return fetch_batch_job_logs_tool(batch_id)
 
 

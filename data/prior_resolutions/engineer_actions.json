@@ -4,7 +4,7 @@
     "matched_symptom": "file acknowledgement timeout",
     "engineer": "previous-support-engineer",
     "actions_taken": [
-      "Checked VM batch logs for FILE_HANDOFF warnings",
+      "Checked container batch worker logs for FILE_HANDOFF warnings",
       "Confirmed PDFs were generated and print file was packaged",
       "Verified downstream acknowledgement arrived late",
       "Requeued handoff job once and monitored acknowledgement",
