@@ -18,6 +18,7 @@ four agents:
 - Document/RAG Agent for mock policies, SOPs, runbooks, and letter documentation
 - Log Troubleshooting Agent for synthetic enterprise correspondence application logs
 - Letter Explanation Agent for explaining mock printed letter output
+- Incident RCA Agent for missing/delayed printed correspondence incidents
 
 ## Agent Flow
 
@@ -26,6 +27,34 @@ four agents:
 3. LangGraph stores the question and routing decision in short-term state.
 4. Supervisor chooses a specialist agent.
 5. Specialist agent calls tools and returns an answer, selected agent, and citations.
+
+## Incident RCA Flow
+
+The incident workflow models support triage for business-reported missing printed
+correspondence. It uses generic enterprise VM batch server terminology and mock
+data only.
+
+```text
+INC ticket
+   ↓
+fetch_incident_details
+   ↓
+fetch_batch_job_logs from VM batch server logs
+   ↓
+fetch_print_delivery_status
+   ↓
+search_prior_resolutions
+   ↓
+search incident triage runbook
+   ↓
+classify operational support action vs CR candidate
+   ↓
+grounded RCA answer with citations
+```
+
+The assistant is positioned as support acceleration, not support replacement. It
+helps engineers reuse previous incident knowledge and isolate the likely failure
+area before taking action.
 
 ## MCP Integration
 
@@ -36,6 +65,10 @@ runtime.
 - Tools: `search_documents`, `execute_sql`, `analyze_logs`
 - Resources: `mock://policies/enterprise-support`, `mock://runbooks/file-transfer`,
   `mock://letter-templates/generation-sop`
+
+Incident RCA tools include `fetch_incident_details`, `fetch_batch_job_logs`,
+`fetch_print_delivery_status`, `search_prior_resolutions`,
+`classify_resolution_path`, and `draft_cr_summary`.
 
 The server can be launched with `python -m app.mcp_server` and integrated with
 an MCP-compatible host over stdio.
@@ -80,6 +113,11 @@ an unsupported answer.
 SQL guardrails enforce SELECT-only access and block mutating, administrative, or
 multi-statement SQL. All user-facing answers include a mock-data disclaimer so
 demo output is not mistaken for real bank/client guidance.
+
+Incident RCA guardrails require evidence from incident records, VM batch logs,
+print delivery status, prior engineer actions, and runbooks. CR summaries are
+draft-only and require human review, tests, approval, and standard change
+governance before any implementation.
 
 ## Production Security Considerations
 

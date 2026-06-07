@@ -1,0 +1,4 @@
+2026-04-29T14:05:00Z VM=vm-batch-03 JOB=CORR_TEMPLATE_BATCH BATCH=B-0972 STATUS=STARTED message="Template batch started"
+2026-04-29T14:05:31Z VM=vm-batch-03 JOB=RULE_EVALUATION BATCH=B-0972 STATUS=FAILED code=TEMPLATE_RULE_MISS message="Required paragraph mapping action_required was not resolved"
+2026-04-29T14:06:02Z VM=vm-batch-03 JOB=CORR_TEMPLATE_BATCH BATCH=B-0972 STATUS=FAILED message="Batch stopped before PDF rendering"
+

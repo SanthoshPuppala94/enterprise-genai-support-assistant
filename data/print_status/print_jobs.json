@@ -1,0 +1,33 @@
+[
+  {
+    "print_job_id": "P-7781",
+    "batch_id": "B-1002",
+    "pdf_generated": true,
+    "file_packaged": true,
+    "file_transferred": false,
+    "downstream_acknowledged": false,
+    "delivery_status": "Not delivered to print queue",
+    "last_status_at": "2026-05-17T10:16:42Z"
+  },
+  {
+    "print_job_id": "P-7715",
+    "batch_id": "B-0995",
+    "pdf_generated": true,
+    "file_packaged": true,
+    "file_transferred": true,
+    "downstream_acknowledged": true,
+    "delivery_status": "Delivered after retry",
+    "last_status_at": "2026-05-10T09:16:10Z"
+  },
+  {
+    "print_job_id": "P-7652",
+    "batch_id": "B-0972",
+    "pdf_generated": false,
+    "file_packaged": false,
+    "file_transferred": false,
+    "downstream_acknowledged": false,
+    "delivery_status": "Not generated",
+    "last_status_at": "2026-04-29T14:05:31Z"
+  }
+]
+

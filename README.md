@@ -1,181 +1,205 @@
-# 🏦 Enterprise GenAI Support Assistant
+# Enterprise GenAI Support Assistant
 
-[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![LangGraph](https://img.shields.io/badge/LangGraph-FF6B35?style=flat)](https://langchain-ai.github.io/langgraph/)
-[![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat&logo=langchain&logoColor=white)](https://langchain.com)
-[![pytest](https://img.shields.io/badge/Tested_with-pytest-0A9EDC?style=flat&logo=pytest&logoColor=white)](https://pytest.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue?style=flat&logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-API-green?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agent%20Workflow-purple?style=flat)](https://www.langchain.com/langgraph)
+[![MCP](https://img.shields.io/badge/MCP-Tool%20Server-orange?style=flat)](https://modelcontextprotocol.io/)
+[![Tests](https://img.shields.io/badge/Tests-pytest-brightgreen?style=flat)](https://docs.pytest.org/)
 
-> **Production-style GenAI PoC** — A mock enterprise correspondence support assistant demonstrating LangGraph supervisor agents, RAG pipelines, SQL safety guardrails, MCP tool governance, and hallucination controls. Uses only synthetic data.
+> **Production-style GenAI PoC** — A mock enterprise correspondence support assistant demonstrating LangGraph supervisor agents, MCP tool governance, incident RCA, RAG, SQL safety guardrails, memory, and hallucination controls. Uses only synthetic data.
 
 ---
 
 ## What It Does
 
-This assistant answers support queries for a mock banking letter-generation workflow. A **LangGraph supervisor agent** routes each incoming question to the right specialist:
+This assistant models a realistic enterprise support workflow where business users raise incidents when expected printed correspondence is missing or delayed. It helps reduce repetitive incident triage by retrieving mock incident details, VM batch server logs, PDF/print delivery status, prior engineer actions, and runbook guidance before recommending next steps.
+
+A **LangGraph supervisor agent** routes each incoming question to the right specialist:
 
 | Agent | Responsibility |
 |-------|---------------|
+| **Incident RCA Agent** | Investigates missing/delayed printed correspondence incidents |
 | **SQL Agent** | Queries operational data with SELECT-only safety validation |
-| **RAG Agent** | Retrieves from mock policies, SOPs, and runbooks with citation grounding |
-| **Log Agent** | Troubleshoots synthetic enterprise log signatures |
-| **Letter Agent** | Explains printed letter sections and maps them to business rules |
-
-All agents share short-term graph state and long-term SQLite preference memory.
+| **Document/RAG Agent** | Searches policies, SOPs, runbooks, and letter documentation |
+| **Log Troubleshooting Agent** | Analyzes synthetic application logs |
+| **Letter Explanation Agent** | Explains mock printed letter output and business rules |
 
 ---
 
-## Architecture
+## Incident RCA Workflow
 
+```text
+Business incident
+   ↓
+LangGraph supervisor
+   ↓
+Incident RCA Agent
+   ↓
+MCP tools fetch:
+   - incident details
+   - VM batch server logs
+   - PDF/print delivery status
+   - prior engineer resolutions
+   - incident triage runbook
+   ↓
+Grounded RCA:
+   - confirmed facts
+   - probable failure area
+   - previous engineer actions
+   - operational vs CR recommendation
+   - citations and guardrail note
 ```
-POST /chat
-    │
-    ▼
-LangGraph Supervisor
-    │
-    ├──► SQL Agent        → SELECT-only SQLite queries
-    ├──► RAG Agent        → ChromaDB-style retrieval + citation check
-    ├──► Log Agent        → Synthetic log pattern matching
-    └──► Letter Agent     → SOP / letter section explanation
-    │
-    ▼
-FastMCP Server (stdio)
-    ├── Tools:     search_documents · execute_sql · analyze_logs
-    └── Resources: mock://policies · mock://runbooks · mock://letter-templates
-    │
-    ▼
-Response: { "answer": "...", "agent_used": "...", "citations": [...] }
-```
+
+The infrastructure is modeled as **enterprise-managed VM batch servers**, not cloud-specific infrastructure. That reflects common regulated enterprise batch processing patterns while keeping the project generic and mock-data only.
 
 ---
 
-## Key Design Decisions
+## MCP Tools and Resources
 
-- **Supervisor pattern** — Routes work to specialized agents instead of forcing one prompt to handle every task type
-- **SQL guardrails** — Rejects `INSERT`, `UPDATE`, `DELETE`, `DROP`, `ALTER`, `CREATE`, `PRAGMA`, and multi-statement SQL
-- **Citation-grounded RAG** — Policy/SOP answers must cite mock documents; no citation → evidence-limited fallback
-- **FastMCP decorators** — Tools and resources registered with explicit schemas so compatible clients can discover and govern them
-- **Memory architecture** — Short-term graph state for the current session; SQLite for long-term user preferences
-- **Secret hygiene** — All credentials via `.env`; no hardcoded API keys
+Decorated FastMCP tools:
+
+- `search_documents`
+- `execute_sql`
+- `analyze_logs`
+- `fetch_incident_details`
+- `fetch_batch_job_logs`
+- `fetch_print_delivery_status`
+- `search_prior_resolutions`
+- `classify_resolution_path`
+- `draft_cr_summary`
+
+Decorated FastMCP resources:
+
+- `mock://policies/enterprise-support`
+- `mock://runbooks/file-transfer`
+- `mock://letter-templates/generation-sop`
+- `mock://runbooks/incident-triage`
 
 ---
 
-## Getting Started
+## Guardrails, Hallucination Controls, and Governance
 
-### Prerequisites
+- SQL tools are SELECT-only and reject INSERT, UPDATE, DELETE, DROP, ALTER, CREATE, PRAGMA, and multi-statement SQL.
+- RAG and incident RCA answers include citations from mock documents, logs, incidents, or runbooks.
+- If citations are unavailable, the assistant returns an evidence-limited fallback instead of inventing a source.
+- Responses include a mock-data disclaimer so generated answers are not confused with real enterprise guidance.
+- Incident recommendations separate confirmed facts, probable root cause, prior engineer actions, and CR decision.
+- CR guidance is draft-only; no automated merge, deployment, rerun, or production reprocessing is allowed.
+- Human approval is required before rerun, reprocess, CR creation, code change, or customer-impacting action.
+
+---
+
+## Tech Stack
+
 - Python 3.11+
-- An OpenAI-compatible API key (optional — the PoC has deterministic local fallbacks for offline testing)
+- FastAPI
+- LangGraph
+- LangChain-compatible structure
+- FastMCP
+- SQLite
+- Local vector search with deterministic embeddings and Chroma-compatible path
+- pytest
+- python-dotenv
 
-### Setup
+---
 
-```bash
-git clone https://github.com/SanthoshPuppala94/enterprise-genai-support-assistant
+## Setup
+
+```powershell
 cd enterprise-genai-support-assistant
-
 python -m venv .venv
-
-# Windows
 .\.venv\Scripts\Activate.ps1
-# macOS / Linux
-source .venv/bin/activate
-
 pip install -r requirements.txt
-cp .env.example .env
-# Edit .env and add your API key if using a hosted LLM
+Copy-Item .env.example .env
 ```
 
-### Run the API
+Open `.env` only if you want to add an OpenAI-compatible API key. The current implementation runs offline with deterministic mock data.
 
-```bash
+---
+
+## Run Locally
+
+```powershell
 uvicorn app.main:app --reload --port 8000
 ```
 
-### Run the MCP Server
+Run the MCP server over stdio:
 
-```bash
+```powershell
 python -m app.mcp_server
-```
-
-### Run Tests
-
-```bash
-pytest
 ```
 
 ---
 
 ## Example Queries
 
-```bash
-# Query the database
+```powershell
 Invoke-RestMethod -Method Post `
   -Uri http://127.0.0.1:8000/chat `
   -ContentType "application/json" `
-  -Body '{"question":"What failed letter batches are in the database?"}'
-
-# Policy retrieval
-Invoke-RestMethod -Method Post `
-  -Uri http://127.0.0.1:8000/chat `
-  -ContentType "application/json" `
-  -Body '{"question":"What does the enterprise support policy say about disclosure approval?"}'
-
-# Log troubleshooting
-Invoke-RestMethod -Method Post `
-  -Uri http://127.0.0.1:8000/chat `
-  -ContentType "application/json" `
-  -Body '{"question":"Troubleshoot the file transfer timeout from the logs."}'
+  -Body '{"question":"Why did INC-2026-1042 happen and does it need a CR?"}'
 ```
 
-### API Contract
+Other sample questions:
 
-**Request**
+- What failed letter batches are in the database?
+- What does the mock enterprise support policy say about disclosure approval?
+- Troubleshoot the file transfer timeout from the logs.
+- Explain the printed letter sections and the business rules behind them.
+- Business says printed letters were not received. What should support check?
+- What actions did previous engineers take for similar incidents?
+- Does INC-2026-1042 need a CR or can support resolve it operationally?
+
+---
+
+## API Contract
+
+`POST /chat`
+
+Request:
+
 ```json
-{ "question": "Troubleshoot the file transfer timeout error in logs" }
+{ "question": "Why did INC-2026-1042 happen and does it need a CR?" }
 ```
 
-**Response**
+Response:
+
 ```json
 {
-  "answer": "Probable mock log findings...",
-  "agent_used": "log_agent",
-  "citations": ["data/logs/support_app.log"]
+  "answer": "Incident RCA summary...",
+  "agent_used": "incident_agent",
+  "citations": ["incident:INC-2026-1042", "data/batch_logs/B-1002.log"]
 }
 ```
 
 ---
 
-## Project Structure
+## Run Tests
 
-```
-enterprise-genai-support-assistant/
-├── app/
-│   ├── main.py           # FastAPI app + /chat endpoint
-│   ├── agents/           # Supervisor + specialist agents
-│   ├── mcp_server.py     # FastMCP tools and resources
-│   └── memory.py         # Short-term + SQLite long-term memory
-├── data/                 # Synthetic mock data (policies, logs, letters)
-├── tests/                # pytest test suite
-├── architecture.md       # Architecture detail and design decisions
-├── .env.example          # Environment template
-└── requirements.txt
+```powershell
+pytest
 ```
 
 ---
 
-## ⚠️ Data Notice
+## Data Notice
 
-This project uses **only synthetic data**. It does not contain real company, client, customer, account, letter, log, or production system data of any kind.
+This project uses **only synthetic data**. It does not contain real company, client, customer, account, letter, log, incident, or production system data of any kind.
 
 ---
 
-## About
+## Interview Positioning
 
-Built as a portfolio project to demonstrate enterprise GenAI patterns — not a production deployment. Talking points:
+Say:
 
-- Supervisor routing vs. monolithic prompting
-- SQL guardrails for safe operational data access
-- Citation-grounded RAG for auditability
-- MCP tool governance with FastMCP
-- Memory without hiding state in prompt text
-- Hallucination controls through evidence-limited fallbacks
+> “I built a mock enterprise correspondence support assistant to reduce repetitive incident triage. When business users report missing printed letters, the assistant uses MCP tools to fetch incident details, VM batch logs, print delivery status, prior engineer actions, and runbook guidance. A LangGraph RCA workflow then produces a grounded summary with citations and recommends whether support can resolve it operationally or whether a CR is needed.”
+
+Strong talking points:
+
+- Supervisor agent routes to specialized agents.
+- MCP acts as a governed integration layer for logs, incident records, prior resolutions, and runbooks.
+- RCA is grounded in evidence and citations to reduce hallucinations.
+- Prior engineer actions reduce dependency on tribal knowledge.
+- SQL and MCP tools are constrained and auditable.
+- CR recommendations are draft-only and require human review, tests, approvals, and standard governance.
+

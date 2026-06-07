@@ -9,7 +9,17 @@ def test_mcp_tools_are_registered_with_fastmcp_decorators():
         return {tool.name for tool in tools}
 
     tool_names = asyncio.run(run())
-    assert {"search_documents", "execute_sql", "analyze_logs"}.issubset(tool_names)
+    assert {
+        "search_documents",
+        "execute_sql",
+        "analyze_logs",
+        "fetch_incident_details",
+        "fetch_batch_job_logs",
+        "fetch_print_delivery_status",
+        "search_prior_resolutions",
+        "classify_resolution_path",
+        "draft_cr_summary",
+    }.issubset(tool_names)
 
 
 def test_mcp_resources_are_registered_with_fastmcp_decorators():
@@ -22,7 +32,19 @@ def test_mcp_resources_are_registered_with_fastmcp_decorators():
         "mock://policies/enterprise-support",
         "mock://runbooks/file-transfer",
         "mock://letter-templates/generation-sop",
+        "mock://runbooks/incident-triage",
     }.issubset(resource_uris)
+
+
+def test_mcp_incident_tool_fetches_ticket():
+    async def run():
+        return await mcp.call_tool("fetch_incident_details", {"incident_id": "INC-2026-1042"})
+
+    content, structured = asyncio.run(run())
+    assert content
+    result = structured.get("result", structured)
+    assert result["batch_id"] == "B-1002"
+
 
 
 def test_mcp_execute_sql_tool_enforces_select_only_safety():

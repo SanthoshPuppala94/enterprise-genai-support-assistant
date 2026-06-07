@@ -1,0 +1,32 @@
+[
+  {
+    "incident_id": "INC-2026-1030",
+    "matched_symptom": "file acknowledgement timeout",
+    "engineer": "previous-support-engineer",
+    "actions_taken": [
+      "Checked VM batch logs for FILE_HANDOFF warnings",
+      "Confirmed PDFs were generated and print file was packaged",
+      "Verified downstream acknowledgement arrived late",
+      "Requeued handoff job once and monitored acknowledgement",
+      "Closed incident as operational delay after business confirmation"
+    ],
+    "resolution_type": "Operational",
+    "cr_required": false,
+    "notes": "If acknowledgement does not arrive after retry, escalate to file transfer support before rerunning the full batch."
+  },
+  {
+    "incident_id": "INC-2026-1011",
+    "matched_symptom": "template rule miss",
+    "engineer": "previous-development-engineer",
+    "actions_taken": [
+      "Compared failed template code with approved paragraph rules",
+      "Found missing action_required paragraph mapping",
+      "Created CR to add missing mapping and regression tests",
+      "Validated rerun in lower environment before production release"
+    ],
+    "resolution_type": "Code or configuration change",
+    "cr_required": true,
+    "notes": "Recurring template mapping failures should be converted to CR rather than handled as repeated operational reruns."
+  }
+]
+

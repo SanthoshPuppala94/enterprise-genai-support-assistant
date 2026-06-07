@@ -1,0 +1,39 @@
+[
+  {
+    "incident_id": "INC-2026-1042",
+    "title": "Business reports missing printed correspondence for daily notice batch",
+    "severity": "High",
+    "reported_by": "business-operations",
+    "reported_at": "2026-05-17T10:30:00Z",
+    "business_impact": "Expected printed letters were not received for a subset of customers.",
+    "batch_id": "B-1002",
+    "print_job_id": "P-7781",
+    "symptoms": ["missing printed letters", "file acknowledgement timeout", "batch failed"],
+    "status": "In triage"
+  },
+  {
+    "incident_id": "INC-2026-1030",
+    "title": "Delayed print delivery for correspondence file handoff",
+    "severity": "Medium",
+    "reported_by": "business-operations",
+    "reported_at": "2026-05-10T09:45:00Z",
+    "business_impact": "Printed letters were delayed but not lost.",
+    "batch_id": "B-0995",
+    "print_job_id": "P-7715",
+    "symptoms": ["delayed print delivery", "retry succeeded", "late acknowledgement"],
+    "status": "Resolved"
+  },
+  {
+    "incident_id": "INC-2026-1011",
+    "title": "Template rule miss caused correspondence batch failure",
+    "severity": "High",
+    "reported_by": "support-operations",
+    "reported_at": "2026-04-29T14:15:00Z",
+    "business_impact": "Letters were not generated for one template family.",
+    "batch_id": "B-0972",
+    "print_job_id": "P-7652",
+    "symptoms": ["template rule miss", "paragraph mapping missing", "batch failed"],
+    "status": "Resolved with CR"
+  }
+]
+

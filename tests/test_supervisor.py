@@ -13,6 +13,10 @@ def test_supervisor_routes_letter_question():
     assert route_question({"question": "Explain the printed letter sections"}) == "letter_agent"
 
 
+def test_supervisor_routes_incident_question():
+    assert route_question({"question": "Why did INC-2026-1042 happen?"}) == "incident_agent"
+
+
 def test_supervisor_honors_preferred_agent():
     assert (
         route_question(
