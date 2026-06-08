@@ -2,6 +2,8 @@ from app.graph.state import ChatState
 from app.services.guardrails import add_mock_data_disclaimer, apply_grounding_guardrails
 from app.tools.incident_tools import (
     classify_resolution_path,
+    correlate_incident_with_code_changes,
+    draft_code_change_analysis,
     draft_cr_summary,
     extract_incident_id,
     fetch_batch_job_logs,
@@ -26,16 +28,33 @@ class IncidentRCAAgent:
         prior_resolutions = search_prior_resolutions(" ".join(incident.get("symptoms", [])))
         runbook = search_incident_runbook(state["question"])
         resolution_path = classify_resolution_path(incident, batch_logs, print_status, prior_resolutions)
+        code_correlation = correlate_incident_with_code_changes(incident, batch_logs)
         cr_summary = draft_cr_summary(incident_id) if resolution_path["cr_required"] else None
+        code_change_analysis = (
+            draft_code_change_analysis(incident_id)
+            if code_correlation["confidence"] in {"medium", "high"}
+            else None
+        )
         citations = [
             f"incident:{incident['incident_id']}",
             batch_logs["source"],
             f"print_status:{print_status['print_job_id']}",
             "prior_resolutions:engineer_actions.json",
             runbook["source"],
+            "deployments:deployments.json",
+            "repo_history:commits.json",
         ]
         state["answer"] = apply_grounding_guardrails(
-            _format_rca_answer(incident, batch_logs, print_status, prior_resolutions, resolution_path, cr_summary),
+            _format_rca_answer(
+                incident,
+                batch_logs,
+                print_status,
+                prior_resolutions,
+                resolution_path,
+                cr_summary,
+                code_correlation,
+                code_change_analysis,
+            ),
             citations,
         )
         state["citations"] = citations
@@ -50,6 +69,8 @@ def _format_rca_answer(
     prior_resolutions,
     resolution_path,
     cr_summary,
+    code_correlation,
+    code_change_analysis,
 ) -> str:
     prior_lines = []
     for item in prior_resolutions[:2]:
@@ -67,6 +88,33 @@ def _format_rca_answer(
             f"- {cr_summary['summary']}\n"
             f"- Governance: {cr_summary['governance']}"
         )
+    deployment_lines = []
+    for deployment in code_correlation.get("recent_deployments", []):
+        deployment_lines.append(
+            f"- {deployment['deployment_id']} deployed at {deployment['deployed_at']} "
+            f"({deployment['hours_before_incident']} hours before incident): {deployment['summary']}"
+        )
+    commit_lines = []
+    for commit in code_correlation.get("related_commits", [])[:2]:
+        commit_lines.append(
+            f"- {commit['commit_id']} committed at {commit['committed_at']} "
+            f"module={commit['module']} linked_cr={commit['linked_cr']}: {commit['summary']}"
+        )
+    code_text = (
+        "\n\nRecent code/deployment correlation:\n"
+        f"- Failed module inferred from logs: {code_correlation['failed_module']}\n"
+        f"- Correlation confidence: {code_correlation['confidence']}\n"
+        f"- Related deployments:\n{chr(10).join(deployment_lines) if deployment_lines else '- None found in window'}\n"
+        f"- Related commits:\n{chr(10).join(commit_lines) if commit_lines else '- None found'}\n"
+        f"- Guardrail: {code_correlation['guardrail']}"
+    )
+    if code_change_analysis:
+        code_text += (
+            "\n\nCode-change analysis draft:\n"
+            f"- {code_change_analysis['title']}\n"
+            f"- {code_change_analysis['analysis']}\n"
+            f"- Guardrail: {code_change_analysis['guardrail']}"
+        )
     answer = (
         f"Incident RCA summary for {incident['incident_id']}\n\n"
         f"Business impact: {incident['business_impact']}\n"
@@ -82,6 +130,7 @@ def _format_rca_answer(
         f"- {resolution_path['path']}\n"
         f"- CR required: {'Yes' if resolution_path['cr_required'] else 'No'}\n"
         "- Human approval is required before rerun, reprocess, CR creation, or production changes."
+        f"{code_text}"
         f"{cr_text}"
     )
     return add_mock_data_disclaimer(answer)

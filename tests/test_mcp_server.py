@@ -19,6 +19,11 @@ def test_mcp_tools_are_registered_with_fastmcp_decorators():
         "search_prior_resolutions",
         "classify_resolution_path",
         "draft_cr_summary",
+        "fetch_recent_deployments",
+        "search_repo_history",
+        "fetch_commit_details",
+        "correlate_incident_with_code_changes",
+        "draft_code_change_analysis",
     }.issubset(tool_names)
 
 

@@ -1,0 +1,39 @@
+[
+  {
+    "commit_id": "c0ffee1",
+    "committed_at": "2026-05-16T18:20:00Z",
+    "module": "file_handoff_worker",
+    "files_changed": ["services/file_handoff/acknowledgement.py", "services/file_handoff/retry_policy.py"],
+    "linked_cr": "CR-2026-2201",
+    "summary": "Adjusted downstream acknowledgement timeout calculation.",
+    "risk_notes": "Could affect batches waiting for downstream print acknowledgement."
+  },
+  {
+    "commit_id": "baddad2",
+    "committed_at": "2026-05-16T18:45:00Z",
+    "module": "correspondence_batch_worker",
+    "files_changed": ["jobs/correspondence/daily_notice_batch.py"],
+    "linked_cr": "CR-2026-2201",
+    "summary": "Added retry metadata to daily notice batch output.",
+    "risk_notes": "Low risk; no file transfer protocol logic changed."
+  },
+  {
+    "commit_id": "decaf03",
+    "committed_at": "2026-04-28T20:10:00Z",
+    "module": "template_rule_engine",
+    "files_changed": ["rules/template_mapping.py", "tests/test_template_mapping.py"],
+    "linked_cr": "CR-2026-2144",
+    "summary": "Refactored required paragraph mapping validation.",
+    "risk_notes": "Could affect template batches when required paragraph mappings are missing."
+  },
+  {
+    "commit_id": "faded04",
+    "committed_at": "2026-05-09T16:00:00Z",
+    "module": "pdf_render_worker",
+    "files_changed": ["services/pdf/assets.py"],
+    "linked_cr": "CR-2026-2188",
+    "summary": "Use fallback assets when optional logos are unavailable.",
+    "risk_notes": "Should not block PDF generation."
+  }
+]
+

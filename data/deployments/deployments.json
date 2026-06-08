@@ -1,0 +1,30 @@
+[
+  {
+    "deployment_id": "DEP-2026-0517-01",
+    "deployed_at": "2026-05-17T09:30:00Z",
+    "environment": "production",
+    "release_version": "2026.05.17.1",
+    "changed_modules": ["file_handoff_worker", "correspondence_batch_worker"],
+    "commit_ids": ["c0ffee1", "baddad2"],
+    "summary": "Updated file handoff acknowledgement timeout handling and retry metadata."
+  },
+  {
+    "deployment_id": "DEP-2026-0429-02",
+    "deployed_at": "2026-04-29T13:30:00Z",
+    "environment": "production",
+    "release_version": "2026.04.29.2",
+    "changed_modules": ["template_rule_engine"],
+    "commit_ids": ["decaf03"],
+    "summary": "Updated paragraph mapping validation for correspondence templates."
+  },
+  {
+    "deployment_id": "DEP-2026-0509-01",
+    "deployed_at": "2026-05-09T22:00:00Z",
+    "environment": "production",
+    "release_version": "2026.05.09.1",
+    "changed_modules": ["pdf_render_worker"],
+    "commit_ids": ["faded04"],
+    "summary": "Improved PDF asset fallback handling."
+  }
+]
+

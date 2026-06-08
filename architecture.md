@@ -47,6 +47,8 @@ search_prior_resolutions
    ↓
 search incident triage runbook
    ↓
+correlate with recent deployments and repo history
+   ↓
 classify operational support action vs CR candidate
    ↓
 grounded RCA answer with citations
@@ -68,7 +70,9 @@ runtime.
 
 Incident RCA tools include `fetch_incident_details`, `fetch_batch_job_logs`,
 `fetch_print_delivery_status`, `search_prior_resolutions`,
-`classify_resolution_path`, and `draft_cr_summary`.
+`classify_resolution_path`, `draft_cr_summary`, `fetch_recent_deployments`,
+`search_repo_history`, `fetch_commit_details`,
+`correlate_incident_with_code_changes`, and `draft_code_change_analysis`.
 
 The server can be launched with `python -m app.mcp_server` and integrated with
 an MCP-compatible host over stdio.
@@ -118,6 +122,11 @@ Incident RCA guardrails require evidence from incident records, container batch 
 print delivery status, prior engineer actions, and runbooks. CR summaries are
 draft-only and require human review, tests, approval, and standard change
 governance before any implementation.
+
+Code-change correlation is read-only. The assistant may inspect mock deployment
+records and commit metadata to identify when related code was implemented, but it
+must not edit code, commit, push, merge, deploy, or bypass protected branch and
+approval workflows.
 
 ## Production Security Considerations
 

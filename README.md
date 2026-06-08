@@ -67,6 +67,11 @@ Decorated FastMCP tools:
 - `search_prior_resolutions`
 - `classify_resolution_path`
 - `draft_cr_summary`
+- `fetch_recent_deployments`
+- `search_repo_history`
+- `fetch_commit_details`
+- `correlate_incident_with_code_changes`
+- `draft_code_change_analysis`
 
 Decorated FastMCP resources:
 
@@ -86,6 +91,7 @@ Decorated FastMCP resources:
 - Incident recommendations separate confirmed facts, probable root cause, prior engineer actions, and CR decision.
 - CR guidance is draft-only; no automated merge, deployment, rerun, or production reprocessing is allowed.
 - Human approval is required before rerun, reprocess, CR creation, code change, or customer-impacting action.
+- Code correlation tools are read-only. They can inspect mock deployments and commit metadata, but cannot edit, commit, push, merge, or deploy code.
 
 ---
 
@@ -149,6 +155,7 @@ Other sample questions:
 - Business says printed letters were not received. What should support check?
 - What actions did previous engineers take for similar incidents?
 - Does INC-2026-1042 need a CR or can support resolve it operationally?
+- Was INC-2026-1042 related to a recent deployment or code change?
 
 ---
 
@@ -199,6 +206,7 @@ Strong talking points:
 - Supervisor agent routes to specialized agents.
 - MCP acts as a governed integration layer for logs, incident records, prior resolutions, and runbooks.
 - RCA is grounded in evidence and citations to reduce hallucinations.
+- Recent deployment and commit metadata are correlated with incident time, failed module, and log signals.
 - Prior engineer actions reduce dependency on tribal knowledge.
 - SQL and MCP tools are constrained and auditable.
-- CR recommendations are draft-only and require human review, tests, approvals, and standard governance.
+- CR and code-change recommendations are draft-only and require human review, tests, approvals, and standard governance.

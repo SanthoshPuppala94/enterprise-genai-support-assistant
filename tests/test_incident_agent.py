@@ -7,5 +7,8 @@ def test_incident_agent_returns_grounded_rca():
     assert "Incident RCA summary for INC-2026-1042" in state["answer"]
     assert "Previous engineer actions" in state["answer"]
     assert "Operational support action" in state["answer"]
+    assert "Recent code/deployment correlation" in state["answer"]
+    assert "c0ffee1" in state["answer"]
+    assert "must not edit code" in state["answer"]
     assert state["citations"]
 
