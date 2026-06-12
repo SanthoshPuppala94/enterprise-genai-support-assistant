@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "enterprise-genai-support-assistant": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_server"]
+    }
+  }
+}
+

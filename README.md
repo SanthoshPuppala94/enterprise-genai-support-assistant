@@ -137,6 +137,69 @@ python -m app.mcp_server
 
 ---
 
+## MCP Inspector Setup
+
+The project includes MCP Inspector setup so you can visually test the FastMCP server tools and resources before connecting the server to an agent client.
+
+Prerequisites:
+
+- Node.js 18+ with `npx`
+- Python virtual environment with project dependencies installed
+
+Launch MCP Inspector:
+
+```powershell
+cd enterprise-genai-support-assistant
+.\scripts\launch_mcp_inspector.ps1
+```
+
+The script runs:
+
+```powershell
+npx @modelcontextprotocol/inspector -- .\.venv\Scripts\python.exe -m app.mcp_server
+```
+
+Then open:
+
+```text
+http://127.0.0.1:6274
+```
+
+In MCP Inspector:
+
+1. Confirm the server connects over stdio.
+2. Open the **Tools** tab.
+3. Run `fetch_incident_details` with:
+
+```json
+{ "incident_id": "INC-2026-1042" }
+```
+
+4. Run `correlate_incident_with_code_changes` with:
+
+```json
+{ "incident_id": "INC-2026-1042", "window_hours": 24 }
+```
+
+5. Open the **Resources** tab and verify:
+
+```text
+mock://policies/enterprise-support
+mock://runbooks/file-transfer
+mock://letter-templates/generation-sop
+mock://runbooks/incident-triage
+```
+
+For a dry run without launching Inspector:
+
+```powershell
+.\scripts\launch_mcp_inspector.ps1 -DryRun
+```
+
+The `mcp.json` file contains a reusable server launch configuration for MCP-compatible clients.
+
+---
+
 ## Example Queries
 
 ```powershell
