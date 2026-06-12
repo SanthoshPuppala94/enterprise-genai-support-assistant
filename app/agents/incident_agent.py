@@ -1,37 +1,31 @@
+import re
+
 from app.graph.state import ChatState
+from app.mcp_client.incident_client import IncidentMCPClient
 from app.services.guardrails import add_mock_data_disclaimer, apply_grounding_guardrails
-from app.tools.incident_tools import (
-    classify_resolution_path,
-    correlate_incident_with_code_changes,
-    draft_code_change_analysis,
-    draft_cr_summary,
-    extract_incident_id,
-    fetch_batch_job_logs,
-    fetch_incident_details,
-    fetch_print_delivery_status,
-    search_incident_runbook,
-    search_prior_resolutions,
-)
 
 
 class IncidentRCAAgent:
     name = "incident_agent"
 
+    def __init__(self, mcp_client: IncidentMCPClient | None = None):
+        self.mcp_client = mcp_client or IncidentMCPClient()
+
     def run(self, state: ChatState) -> ChatState:
-        incident_id = extract_incident_id(state["question"]) or "INC-2026-1042"
-        incident = fetch_incident_details(incident_id)
-        batch_logs = fetch_batch_job_logs(incident["batch_id"])
-        print_status = fetch_print_delivery_status(
+        incident_id = _extract_incident_id(state["question"]) or "INC-2026-1042"
+        incident = self.mcp_client.fetch_incident_details(incident_id)
+        batch_logs = self.mcp_client.fetch_batch_job_logs(incident["batch_id"])
+        print_status = self.mcp_client.fetch_print_delivery_status(
             print_job_id=incident.get("print_job_id"),
             batch_id=incident.get("batch_id"),
         )
-        prior_resolutions = search_prior_resolutions(" ".join(incident.get("symptoms", [])))
-        runbook = search_incident_runbook(state["question"])
-        resolution_path = classify_resolution_path(incident, batch_logs, print_status, prior_resolutions)
-        code_correlation = correlate_incident_with_code_changes(incident, batch_logs)
-        cr_summary = draft_cr_summary(incident_id) if resolution_path["cr_required"] else None
+        prior_resolutions = self.mcp_client.search_prior_resolutions(" ".join(incident.get("symptoms", [])))
+        runbook = self.mcp_client.search_incident_runbook(state["question"])
+        resolution_path = self.mcp_client.classify_resolution_path(incident_id)
+        code_correlation = self.mcp_client.correlate_incident_with_code_changes(incident_id)
+        cr_summary = self.mcp_client.draft_cr_summary(incident_id) if resolution_path["cr_required"] else None
         code_change_analysis = (
-            draft_code_change_analysis(incident_id)
+            self.mcp_client.draft_code_change_analysis(incident_id)
             if code_correlation["confidence"] in {"medium", "high"}
             else None
         )
@@ -134,4 +128,9 @@ def _format_rca_answer(
         f"{cr_text}"
     )
     return add_mock_data_disclaimer(answer)
+
+
+def _extract_incident_id(text: str) -> str | None:
+    match = re.search(r"\bINC-\d{4}-\d{4}\b", text.upper())
+    return match.group(0) if match else None
 

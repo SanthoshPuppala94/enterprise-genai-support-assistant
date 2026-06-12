@@ -17,6 +17,7 @@ def test_mcp_tools_are_registered_with_fastmcp_decorators():
         "fetch_batch_job_logs",
         "fetch_print_delivery_status",
         "search_prior_resolutions",
+        "search_incident_runbook",
         "classify_resolution_path",
         "draft_cr_summary",
         "fetch_recent_deployments",

@@ -37,6 +37,8 @@ and mock data only.
 ```text
 INC ticket
    ↓
+Incident RCA Agent as MCP client
+   ↓
 fetch_incident_details
    ↓
 fetch_batch_job_logs from container batch worker logs
@@ -127,6 +129,13 @@ Code-change correlation is read-only. The assistant may inspect mock deployment
 records and commit metadata to identify when related code was implemented, but it
 must not edit code, commit, push, merge, deploy, or bypass protected branch and
 approval workflows.
+
+## MCP Client Boundary
+
+The Incident RCA Agent calls `app/mcp_client/incident_client.py`, which invokes
+FastMCP tools by name. The MCP server then delegates to `app/tools/incident_tools.py`.
+This structure keeps agent reasoning separate from tool implementation and makes
+the MCP layer testable with MCP Inspector.
 
 ## Production Security Considerations
 

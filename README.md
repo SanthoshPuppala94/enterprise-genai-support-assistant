@@ -35,7 +35,9 @@ LangGraph supervisor
    ↓
 Incident RCA Agent
    ↓
-MCP tools fetch:
+MCP Client Adapter
+   ↓
+FastMCP server tools fetch:
    - incident details
    - cloud/container batch worker logs
    - PDF/print delivery status
@@ -79,6 +81,26 @@ Decorated FastMCP resources:
 - `mock://runbooks/file-transfer`
 - `mock://letter-templates/generation-sop`
 - `mock://runbooks/incident-triage`
+
+---
+
+## MCP Client Boundary
+
+The Incident RCA Agent does not directly read mock logs, incidents, deployments, or repository history. It calls an MCP client adapter:
+
+```text
+Incident RCA Agent
+   ↓
+app/mcp_client/incident_client.py
+   ↓
+FastMCP server tools
+   ↓
+app/tools/incident_tools.py
+   ↓
+mock data sources
+```
+
+This keeps the production boundary clear: agents request evidence through governed MCP tools instead of directly accessing implementation code or data sources.
 
 ---
 
@@ -268,6 +290,7 @@ Strong talking points:
 
 - Supervisor agent routes to specialized agents.
 - MCP acts as a governed integration layer for logs, incident records, prior resolutions, and runbooks.
+- The Incident RCA Agent uses an MCP client adapter instead of directly importing incident tool implementations.
 - RCA is grounded in evidence and citations to reduce hallucinations.
 - Recent deployment and commit metadata are correlated with incident time, failed module, and log signals.
 - Prior engineer actions reduce dependency on tribal knowledge.

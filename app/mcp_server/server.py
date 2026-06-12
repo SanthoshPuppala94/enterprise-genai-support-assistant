@@ -14,6 +14,7 @@ from app.tools.incident_tools import (
     fetch_incident_details as fetch_incident_details_tool,
     fetch_print_delivery_status as fetch_print_delivery_status_tool,
     fetch_recent_deployments as fetch_recent_deployments_tool,
+    search_incident_runbook as search_incident_runbook_tool,
     search_repo_history as search_repo_history_tool,
     search_prior_resolutions as search_prior_resolutions_tool,
 )
@@ -76,6 +77,12 @@ def fetch_print_delivery_status(print_job_id: str | None = None, batch_id: str |
 def search_prior_resolutions(query: str) -> list[dict[str, Any]]:
     """Search previous synthetic incident resolutions and engineer actions."""
     return search_prior_resolutions_tool(query)
+
+
+@mcp.tool()
+def search_incident_runbook(query: str) -> dict[str, str]:
+    """Read the synthetic incident triage runbook for grounded RCA guidance."""
+    return search_incident_runbook_tool(query)
 
 
 @mcp.tool()
