@@ -1,14 +1,23 @@
 import asyncio
 
 from app.mcp_server.server import mcp
+from app.mcp_servers.db_server import mcp as db_mcp
+from app.mcp_servers.git_server import mcp as git_mcp
+from app.mcp_servers.incident_server import mcp as incident_mcp
+from app.mcp_servers.log_server import mcp as log_mcp
+from app.mcp_servers.runbook_server import mcp as runbook_mcp
+
+
+def _tool_names(server):
+    async def run():
+        tools = await server.list_tools()
+        return {tool.name for tool in tools}
+
+    return asyncio.run(run())
 
 
 def test_mcp_tools_are_registered_with_fastmcp_decorators():
-    async def run():
-        tools = await mcp.list_tools()
-        return {tool.name for tool in tools}
-
-    tool_names = asyncio.run(run())
+    tool_names = _tool_names(mcp)
     assert {
         "search_documents",
         "execute_sql",
@@ -26,6 +35,32 @@ def test_mcp_tools_are_registered_with_fastmcp_decorators():
         "correlate_incident_with_code_changes",
         "draft_code_change_analysis",
     }.issubset(tool_names)
+
+
+def test_domain_mcp_servers_expose_separated_tool_sets():
+    assert _tool_names(incident_mcp) == {
+        "fetch_incident_details",
+        "search_prior_resolutions",
+        "draft_cr_summary",
+    }
+    assert _tool_names(log_mcp) == {
+        "analyze_logs",
+        "fetch_batch_job_logs",
+        "fetch_print_delivery_status",
+    }
+    assert _tool_names(db_mcp) == {"execute_sql"}
+    assert _tool_names(git_mcp) == {
+        "fetch_recent_deployments",
+        "search_repo_history",
+        "fetch_commit_details",
+        "correlate_incident_with_code_changes",
+        "classify_resolution_path",
+        "draft_code_change_analysis",
+    }
+    assert _tool_names(runbook_mcp) == {
+        "search_documents",
+        "search_incident_runbook",
+    }
 
 
 def test_mcp_resources_are_registered_with_fastmcp_decorators():

@@ -11,3 +11,10 @@ def test_incident_mcp_client_calls_fastmcp_tools():
     assert logs["signals"]
     assert "incident_triage_runbook.md" in runbook["source"]
 
+
+def test_incident_mcp_client_routes_to_domain_servers():
+    client = IncidentMCPClient()
+    assert client.tool_server_map["fetch_incident_details"].name == "enterprise-support-incident-mcp"
+    assert client.tool_server_map["fetch_batch_job_logs"].name == "enterprise-support-log-mcp"
+    assert client.tool_server_map["search_incident_runbook"].name == "enterprise-support-runbook-mcp"
+    assert client.tool_server_map["correlate_incident_with_code_changes"].name == "enterprise-support-git-mcp"

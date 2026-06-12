@@ -1,9 +1,28 @@
 {
   "mcpServers": {
-    "enterprise-genai-support-assistant": {
+    "enterprise-support-aggregate": {
       "command": ".venv\\Scripts\\python.exe",
       "args": ["-m", "app.mcp_server"]
+    },
+    "enterprise-support-incident": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_servers.incident_server"]
+    },
+    "enterprise-support-log": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_servers.log_server"]
+    },
+    "enterprise-support-db": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_servers.db_server"]
+    },
+    "enterprise-support-git": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_servers.git_server"]
+    },
+    "enterprise-support-runbook": {
+      "command": ".venv\\Scripts\\python.exe",
+      "args": ["-m", "app.mcp_servers.runbook_server"]
     }
   }
 }
-

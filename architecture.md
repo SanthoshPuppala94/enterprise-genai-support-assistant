@@ -70,11 +70,13 @@ runtime.
 - Resources: `mock://policies/enterprise-support`, `mock://runbooks/file-transfer`,
   `mock://letter-templates/generation-sop`
 
-Incident RCA tools include `fetch_incident_details`, `fetch_batch_job_logs`,
-`fetch_print_delivery_status`, `search_prior_resolutions`,
-`classify_resolution_path`, `draft_cr_summary`, `fetch_recent_deployments`,
-`search_repo_history`, `fetch_commit_details`,
-`correlate_incident_with_code_changes`, and `draft_code_change_analysis`.
+Production MCP is split by domain:
+
+- Incident MCP Server: `fetch_incident_details`, `search_prior_resolutions`, `draft_cr_summary`
+- Log MCP Server: `fetch_batch_job_logs`, `fetch_print_delivery_status`, `analyze_logs`
+- DB MCP Server: `execute_sql`
+- Git MCP Server: `fetch_recent_deployments`, `search_repo_history`, `fetch_commit_details`, `correlate_incident_with_code_changes`, `classify_resolution_path`, `draft_code_change_analysis`
+- Runbook/RAG MCP Server: `search_documents`, `search_incident_runbook`, runbook/policy resources
 
 The server can be launched with `python -m app.mcp_server` and integrated with
 an MCP-compatible host over stdio.

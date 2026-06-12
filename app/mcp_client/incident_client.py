@@ -1,7 +1,10 @@
 import asyncio
 from typing import Any
 
-from app.mcp_server.server import mcp
+from app.mcp_servers.git_server import mcp as git_mcp
+from app.mcp_servers.incident_server import mcp as incident_mcp
+from app.mcp_servers.log_server import mcp as log_mcp
+from app.mcp_servers.runbook_server import mcp as runbook_mcp
 
 
 class IncidentMCPClient:
@@ -10,6 +13,18 @@ class IncidentMCPClient:
     The production boundary is preserved: agents call MCP tools by name through
     this client instead of importing tool implementation functions directly.
     """
+
+    tool_server_map = {
+        "fetch_incident_details": incident_mcp,
+        "search_prior_resolutions": incident_mcp,
+        "draft_cr_summary": incident_mcp,
+        "fetch_batch_job_logs": log_mcp,
+        "fetch_print_delivery_status": log_mcp,
+        "search_incident_runbook": runbook_mcp,
+        "classify_resolution_path": git_mcp,
+        "correlate_incident_with_code_changes": git_mcp,
+        "draft_code_change_analysis": git_mcp,
+    }
 
     def fetch_incident_details(self, incident_id: str) -> dict[str, Any]:
         return self._call_tool("fetch_incident_details", {"incident_id": incident_id})
@@ -56,8 +71,8 @@ class IncidentMCPClient:
         return asyncio.run(self._call_tool_async(tool_name, arguments))
 
     async def _call_tool_async(self, tool_name: str, arguments: dict[str, Any]) -> Any:
-        _content, structured = await mcp.call_tool(tool_name, arguments)
+        server = self.tool_server_map[tool_name]
+        _content, structured = await server.call_tool(tool_name, arguments)
         if isinstance(structured, dict) and "result" in structured:
             return structured["result"]
         return structured
-

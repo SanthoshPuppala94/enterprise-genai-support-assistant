@@ -157,6 +157,16 @@ Run the MCP server over stdio:
 python -m app.mcp_server
 ```
 
+Production-style domain MCP servers:
+
+```powershell
+python -m app.mcp_servers.incident_server
+python -m app.mcp_servers.log_server
+python -m app.mcp_servers.db_server
+python -m app.mcp_servers.git_server
+python -m app.mcp_servers.runbook_server
+```
+
 ---
 
 ## MCP Inspector Setup
@@ -172,13 +182,23 @@ Launch MCP Inspector:
 
 ```powershell
 cd enterprise-genai-support-assistant
-.\scripts\launch_mcp_inspector.ps1
+.\scripts\launch_mcp_inspector.ps1 -Server aggregate
 ```
 
 The script runs:
 
 ```powershell
 npx @modelcontextprotocol/inspector -- .\.venv\Scripts\python.exe -m app.mcp_server
+```
+
+To inspect an individual production-style domain server:
+
+```powershell
+.\scripts\launch_mcp_inspector.ps1 -Server incident
+.\scripts\launch_mcp_inspector.ps1 -Server log
+.\scripts\launch_mcp_inspector.ps1 -Server db
+.\scripts\launch_mcp_inspector.ps1 -Server git
+.\scripts\launch_mcp_inspector.ps1 -Server runbook
 ```
 
 Then open:
@@ -218,7 +238,7 @@ For a dry run without launching Inspector:
 .\scripts\launch_mcp_inspector.ps1 -DryRun
 ```
 
-The `mcp.json` file contains a reusable server launch configuration for MCP-compatible clients.
+The `mcp.json` file contains reusable launch configurations for the aggregate demo server and all production-style domain MCP servers.
 
 ---
 
