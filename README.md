@@ -54,6 +54,30 @@ Grounded RCA:
 
 The infrastructure is modeled as **Dockerized batch workers running in a cloud-ready enterprise environment**. The project stays provider-neutral, but the terminology aligns with modern containerized workloads, centralized logging, and cloud deployment patterns.
 
+The incident RCA path is modeled as explicit LangGraph nodes:
+
+```text
+incident_intake
+   ↓
+incident_fetch_details
+   ↓
+incident_fetch_batch_logs
+   ↓
+incident_fetch_print_status
+   ↓
+incident_search_prior_resolutions
+   ↓
+incident_search_runbook
+   ↓
+incident_correlate_code_changes
+   ↓
+incident_classify_resolution
+   ↓
+incident_finalize
+```
+
+This makes the workflow auditable, testable, and easy to extend with approval gates.
+
 ---
 
 ## MCP Tools and Resources
@@ -309,6 +333,7 @@ Say:
 Strong talking points:
 
 - Supervisor agent routes to specialized agents.
+- Incident RCA is represented as explicit LangGraph workflow nodes, not a hidden one-prompt chain.
 - MCP acts as a governed integration layer for logs, incident records, prior resolutions, and runbooks.
 - The Incident RCA Agent uses an MCP client adapter instead of directly importing incident tool implementations.
 - RCA is grounded in evidence and citations to reduce hallucinations.

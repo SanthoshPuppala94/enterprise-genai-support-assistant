@@ -60,6 +60,23 @@ The assistant is positioned as support acceleration, not support replacement. It
 helps engineers reuse previous incident knowledge and isolate the likely failure
 area before taking action.
 
+In code, the incident RCA is represented as explicit LangGraph nodes:
+
+```text
+incident_intake
+incident_fetch_details
+incident_fetch_batch_logs
+incident_fetch_print_status
+incident_search_prior_resolutions
+incident_search_runbook
+incident_correlate_code_changes
+incident_classify_resolution
+incident_finalize
+```
+
+Each node has one responsibility and writes its evidence back into `ChatState`,
+which improves auditability, testing, and production governance.
+
 ## MCP Integration
 
 `app/mcp_server/server.py` is a production-style FastMCP server. Tools and

@@ -39,7 +39,7 @@ class IncidentRCAAgent:
             "repo_history:commits.json",
         ]
         state["answer"] = apply_grounding_guardrails(
-            _format_rca_answer(
+            format_rca_answer(
                 incident,
                 batch_logs,
                 print_status,
@@ -56,7 +56,7 @@ class IncidentRCAAgent:
         return state
 
 
-def _format_rca_answer(
+def format_rca_answer(
     incident,
     batch_logs,
     print_status,
